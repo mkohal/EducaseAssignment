@@ -1,10 +1,38 @@
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+
+// const Signup = () => {
+//   const navigate = useNavigate();
+//   const [showPassword, setShowPassword] = useState(true);
+
+//   const [name, setName] = useState("Marry Doe");
+//   const [phone, setPhone] = useState("9778884345");
+//   const [email, setEmail] = useState("Marry@gmail.com");
+//   const [password, setPassword] = useState("Marry1234");
+//   const [company, setCompany] = useState("Marry Inc.");
+//   const [isAgency, setIsAgency] = useState("");
+
+//   useEffect(() => {
+//     sessionStorage.clear();
+//   }, []);
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+
+//     const finalName = name.trim() || "Marry Doe";
+//     const finalEmail = email.trim() || "Marry@gmail.com";
+
+//     sessionStorage.setItem("userName", finalName);
+//     sessionStorage.setItem("userEmail", finalEmail);
+
+//     navigate("/profile");
+//   };
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(true);
-
   const [name, setName] = useState("Marry Doe");
   const [phone, setPhone] = useState("9778884345");
   const [email, setEmail] = useState("Marry@gmail.com");
@@ -19,11 +47,25 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const finalName = name.trim() || "Marry Doe";
-    const finalEmail = email.trim() || "Marry@gmail.com";
+    if (!name || !email || !password || !phone || !company || !isAgency) {
+      alert("Please fill all required fields");
+      return;
+    }
 
-    sessionStorage.setItem("userName", finalName);
-    sessionStorage.setItem("userEmail", finalEmail);
+    const newUser = { name, email, password };
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const exists = users.some((user) => user.email === newUser.email);
+
+    if (exists) {
+      alert("User already exists with this email.");
+      return;
+    }
+
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    sessionStorage.setItem("userName", name);
+    sessionStorage.setItem("userEmail", email);
 
     navigate("/profile");
   };
